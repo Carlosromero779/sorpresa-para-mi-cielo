@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para Ti, Mi Cielo</title>
+  <meta name="description" content="Un album romantico e interactivo creado con todo mi amor para ti." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&family=Caveat:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --rosa-suave:#fce4ec; --rosa-medio:#f48fb1; --rosa-fuerte:#e91e8c;
+      --borgona:#880e4f; --crema:#fff8f0; --dorado:#d4a855;
+      --texto-oscuro:#2d1a2e; --texto-gris:#6e4a6e;
+      --sombra-suave:rgba(0,0,0,0.12); --radio-grande:2rem; --radio-medio:1rem;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:'Poppins',sans-serif;background:var(--crema);color:var(--texto-oscuro);overflow-x:hidden;}
+    #particles-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.45;}
+    #pantalla-inicio{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;justify-content:center;align-items:center;background:radial-gradient(ellipse at 50% 40%,#ff6699 0%,#cc2266 45%,#660033 100%);transition:opacity 0.9s ease,transform 0.9s ease;overflow:hidden;}
+    #pantalla-inicio.oculta{opacity:0;transform:scale(1.06);pointer-events:none;}
+    .estrella{position:absolute;border-radius:50%;background:rgba(255,255,255,0.75);animation:parpadeo 2.5s infinite alternate;}
+    @keyframes parpadeo{from{opacity:0.2;transform:scale(0.8);}to{opacity:1;transform:scale(1.2);}}
+    .sobre-wrapper{position:relative;width:clamp(160px,30vw,280px);height:clamp(110px,21vw,200px);margin-bottom:2.5rem;cursor:pointer;animation:flotar 3s ease-in-out infinite;filter:drop-shadow(0 20px 40px rgba(0,0,0,0.35));}
+    @keyframes flotar{0%,100%{transform:translateY(0px) rotate(-1deg);}50%{transform:translateY(-18px) rotate(1deg);}}
+    .sobre{width:100%;height:100%;position:relative;}
+    .sobre-cuerpo{position:absolute;inset:0;background:linear-gradient(145deg,#fff0f5,#ffe0eb);border-radius:0.5rem;border:2px solid rgba(255,255,255,0.6);}
+    .sobre-frente{position:absolute;bottom:0;left:0;width:100%;height:55%;background:linear-gradient(to top,#ffc0cb,#ffaabb);border-radius:0 0 0.5rem 0.5rem;display:flex;align-items:center;justify-content:center;}
+    .corazon-sobre{font-size:clamp(1.8rem,4vw,3rem);animation:latido 1.2s ease-in-out infinite;filter:drop-shadow(0 0 12px rgba(255,80,120,0.9));}
+    @keyframes latido{0%,100%{transform:scale(1);}14%{transform:scale(1.25);}28%{transform:scale(1);}42%{transform:scale(1.18);}}
+    .sobre-solapa{position:absolute;top:0;left:0;width:0;height:0;border-left:calc(clamp(160px,30vw,280px) / 2) solid transparent;border-right:calc(clamp(160px,30vw,280px) / 2) solid transparent;border-top:calc(clamp(110px,21vw,200px) * 0.48) solid #ff8fa8;transform-origin:top center;transition:transform 0.6s ease;}
+    .sobre-wrapper:hover .sobre-solapa,.sobre-wrapper.abierto .sobre-solapa{transform:rotateX(180deg);}
+    .carta-interna{position:absolute;bottom:10%;left:10%;width:80%;height:90%;background:white;border-radius:0.3rem;display:flex;align-items:center;justify-content:center;font-family:'Dancing Script',cursive;font-size:clamp(0.7rem,1.5vw,1rem);color:var(--rosa-fuerte);text-align:center;padding:0.5rem;transform:translateY(0);transition:transform 0.8s cubic-bezier(0.34,1.56,0.64,1);z-index:-1;}
+    .sobre-wrapper.abierto .carta-interna{transform:translateY(-75%);}
+    .titulo-inicio{font-family:'Dancing Script',cursive;font-size:clamp(2rem,6vw,4rem);color:#fff;text-align:center;line-height:1.2;text-shadow:0 0 30px rgba(255,180,200,0.8),0 4px 8px rgba(0,0,0,0.3);margin-bottom:0.5rem;animation:aparecer 1s ease 0.3s both;}
+    .subtitulo-inicio{font-size:clamp(0.85rem,2vw,1.1rem);color:rgba(255,255,255,0.85);text-align:center;margin-bottom:2.5rem;animation:aparecer 1s ease 0.6s both;letter-spacing:0.05em;}
+    @keyframes aparecer{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+    #btn-comenzar{position:relative;padding:clamp(0.8rem,2vw,1.1rem) clamp(2rem,6vw,3.5rem);font-family:'Poppins',sans-serif;font-size:clamp(0.95rem,2.2vw,1.2rem);font-weight:600;color:var(--borgona);background:linear-gradient(135deg,#fff0f5,#ffe4ef,#fff);border:none;border-radius:100px;cursor:pointer;box-shadow:0 0 0 3px rgba(255,255,255,0.5),0 8px 25px rgba(0,0,0,0.25),0 0 60px rgba(255,150,190,0.4);transition:transform 0.3s ease,box-shadow 0.3s ease;animation:aparecer 1s ease 0.9s both;overflow:hidden;letter-spacing:0.04em;}
+    #btn-comenzar::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,0.5) 60%,transparent 70%);transform:translateX(-100%) skewX(-20deg);transition:transform 0.6s ease;}
+    #btn-comenzar:hover{transform:scale(1.07) translateY(-3px);box-shadow:0 0 0 4px rgba(255,255,255,0.7),0 14px 35px rgba(0,0,0,0.3),0 0 80px rgba(255,120,180,0.6);}
+    #btn-comenzar:hover::before{transform:translateX(200%) skewX(-20deg);}
+    #album-principal{opacity:0;transform:translateY(30px);transition:opacity 0.8s ease 0.3s,transform 0.8s ease 0.3s;pointer-events:none;}
+    #album-principal.visible{opacity:1;transform:translateY(0);pointer-events:all;}
+    .album-header{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:3rem 1.5rem;background:linear-gradient(160deg,#fff0f5 0%,#ffe4ef 50%,#ffd6e8 100%);position:relative;overflow:hidden;}
+    .album-header::before{content:'';position:absolute;width:60vw;height:60vw;max-width:600px;max-height:600px;border-radius:50%;background:radial-gradient(circle,rgba(233,30,140,0.1) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+    .album-titulo{font-family:'Dancing Script',cursive;font-size:clamp(3rem,8vw,6rem);color:var(--borgona);line-height:1.15;text-shadow:0 2px 20px rgba(136,14,79,0.2);margin-bottom:1rem;}
+    .album-subtitulo{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1rem,2.5vw,1.5rem);color:var(--texto-gris);max-width:600px;line-height:1.6;margin-bottom:2.5rem;}
+    .linea-decorativa{display:flex;align-items:center;gap:1rem;color:var(--rosa-fuerte);font-size:1.5rem;}
+    .linea-decorativa span:first-child,.linea-decorativa span:last-child{display:block;width:clamp(40px,8vw,100px);height:1px;background:linear-gradient(to right,transparent,var(--rosa-fuerte));}
+    .linea-decorativa span:last-child{background:linear-gradient(to left,transparent,var(--rosa-fuerte));}
+    .scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;color:var(--rosa-fuerte);font-size:0.8rem;opacity:0.7;animation:bounce 2s ease infinite;}
+    @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(8px);}}
+    .galeria-seccion{padding:clamp(3rem,6vw,6rem) clamp(1rem,4vw,4rem);background:var(--crema);}
+    .seccion-titulo{font-family:'Dancing Script',cursive;font-size:clamp(2rem,5vw,3.5rem);color:var(--borgona);text-align:center;margin-bottom:0.5rem;}
+    .seccion-subtitulo{font-family:'Playfair Display',serif;font-style:italic;text-align:center;color:var(--texto-gris);font-size:clamp(0.9rem,1.8vw,1.15rem);margin-bottom:3.5rem;}
+    .foto-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(1.5rem,3vw,2.5rem);max-width:1200px;margin:0 auto;}
+    .foto-item{opacity:0;transition:opacity 0.7s ease,transform 0.7s ease;}
+    .foto-item.visible{opacity:1 !important;transform:none !important;}
+    .anim-fade-up{transform:translateY(60px);}
+    .anim-zoom-in{transform:scale(0.75);}
+    .anim-slide-left{transform:translateX(-60px);}
+    .anim-slide-right{transform:translateX(60px);}
+    .anim-flip{transform:rotateY(90deg);}
+    .foto-polaroid{background:#fff;padding:0.9rem 0.9rem 2.8rem;box-shadow:0 8px 30px var(--sombra-suave);border-radius:0.3rem;position:relative;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.4s ease;}
+    .foto-polaroid:hover{transform:scale(1.04) rotate(0deg) !important;box-shadow:0 20px 50px rgba(0,0,0,0.2);z-index:10;}
+    .foto-polaroid img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;}
+    .foto-polaroid .dedicatoria{position:absolute;bottom:0.3rem;left:0;width:100%;text-align:center;font-family:'Caveat',cursive;font-size:clamp(1rem,2.2vw,1.3rem);color:#555;padding:0 0.5rem;line-height:1.2;}
+    .polaroid-rot-pos{transform:rotate(2.5deg);}
+    .polaroid-rot-neg{transform:rotate(-2.8deg);}
+    .polaroid-rot-pos2{transform:rotate(1.5deg);}
+    .foto-elegante{border-radius:var(--radio-grande);overflow:hidden;position:relative;box-shadow:0 4px 6px rgba(0,0,0,0.07),0 10px 30px rgba(233,30,140,0.12),0 0 0 1px rgba(233,30,140,0.08);transition:transform 0.4s ease,box-shadow 0.4s ease;background:#fff;}
+    .foto-elegante:hover{transform:translateY(-8px);box-shadow:0 15px 40px rgba(0,0,0,0.15),0 0 0 2px var(--rosa-fuerte),0 0 60px rgba(233,30,140,0.2);}
+    .foto-elegante img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;}
+    .foto-elegante .dedicatoria{padding:1rem 1.2rem 1.2rem;font-family:'Dancing Script',cursive;font-size:clamp(1.05rem,2.2vw,1.35rem);color:var(--borgona);line-height:1.3;text-align:center;background:#fff;}
+    .foto-overlay{position:relative;border-radius:var(--radio-medio);overflow:hidden;cursor:pointer;box-shadow:0 8px 24px var(--sombra-suave);}
+    .foto-overlay img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;transition:transform 0.6s ease;}
+    .foto-overlay:hover img{transform:scale(1.08);}
+    .foto-overlay .overlay-capa{position:absolute;inset:0;background:linear-gradient(to top,rgba(136,14,79,0.88) 0%,rgba(136,14,79,0.4) 50%,transparent 100%);display:flex;align-items:flex-end;padding:1.5rem;opacity:0;transition:opacity 0.4s ease;}
+    .foto-overlay:hover .overlay-capa{opacity:1;}
+    .foto-overlay .dedicatoria{font-family:'Dancing Script',cursive;font-size:clamp(1.1rem,2.5vw,1.5rem);color:#fff;line-height:1.35;text-shadow:0 2px 8px rgba(0,0,0,0.5);}
+    .foto-wide{grid-column:span 2;border-radius:var(--radio-grande);overflow:hidden;position:relative;box-shadow:0 12px 40px rgba(0,0,0,0.15);display:flex;min-height:320px;transition:transform 0.4s ease;}
+    /* Foto 12: cierre panorámico, ocupa las 3 columnas */
+    .foto-panoramica{grid-column:1 / -1;border-radius:var(--radio-grande);overflow:hidden;position:relative;box-shadow:0 12px 40px rgba(0,0,0,0.15);display:flex;min-height:280px;transition:transform 0.4s ease;}
+    .foto-panoramica:hover{transform:scale(1.008);}
+    .foto-panoramica img{width:45%;height:100%;object-fit:cover;flex-shrink:0;}
+    .foto-panoramica .wide-texto{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:clamp(1.5rem,3vw,2.5rem);background:linear-gradient(135deg,#fff0f5,#ffe4ef,#fcd5e8);text-align:center;}
+    .foto-panoramica .wide-titulo{font-family:'Dancing Script',cursive;font-size:clamp(1.6rem,3.5vw,2.4rem);color:var(--borgona);margin-bottom:0.7rem;}
+    .foto-panoramica .dedicatoria{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(0.9rem,1.8vw,1.1rem);color:var(--texto-gris);line-height:1.7;max-width:420px;}
+    .foto-panoramica .corazon-deco{margin-top:1rem;font-size:2rem;animation:latido 1.8s ease-in-out infinite;}
+    @media(max-width:600px){.foto-panoramica{flex-direction:column;min-height:unset;}.foto-panoramica img{width:100%;height:220px;}}
+    .foto-wide:hover{transform:scale(1.015);}
+    /* Columna para foto 8: ocupa toda la altura del row junto a la wide */
+    .foto8-columna{display:flex;flex-direction:column;gap:clamp(1rem,2vw,1.5rem);height:100%;}
+    /* Tarjeta de cita animada */
+    .tarjeta-cita{flex:1;min-height:90px;border-radius:var(--radio-medio);background:linear-gradient(145deg,var(--borgona),#c2185b,#ad1457);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.2rem 1.5rem;text-align:center;box-shadow:0 8px 28px rgba(136,14,79,0.35);position:relative;overflow:hidden;}
+    .tarjeta-cita::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 50%,rgba(255,255,255,0.12) 0%,transparent 60%);pointer-events:none;}
+    .tarjeta-cita .cita-corazon{font-size:1.8rem;animation:latido 1.4s ease-in-out infinite;margin-bottom:0.5rem;}
+    .tarjeta-cita .cita-texto{font-family:'Dancing Script',cursive;font-size:clamp(0.95rem,2vw,1.2rem);color:#fff;line-height:1.45;text-shadow:0 2px 8px rgba(0,0,0,0.3);}
+    .foto-wide img{width:55%;height:100%;object-fit:cover;flex-shrink:0;}
+    .foto-wide .wide-texto{flex:1;display:flex;flex-direction:column;justify-content:center;padding:clamp(1.5rem,3vw,2.5rem);background:linear-gradient(135deg,#fff0f5,#ffe4ef);}
+    .foto-wide .wide-titulo{font-family:'Dancing Script',cursive;font-size:clamp(1.4rem,3vw,2rem);color:var(--borgona);margin-bottom:0.7rem;}
+    .foto-wide .dedicatoria{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(0.85rem,1.6vw,1rem);color:var(--texto-gris);line-height:1.7;}
+    .foto-wide .corazon-deco{margin-top:1rem;font-size:1.5rem;animation:latido 1.8s ease-in-out infinite;}
+    .foto-flip-container{perspective:1000px;border-radius:var(--radio-medio);}
+    .foto-flip-inner{position:relative;width:100%;aspect-ratio:3/4;transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);transform-style:preserve-3d;}
+    .foto-flip-container:hover .foto-flip-inner{transform:rotateY(180deg);}
+    .foto-flip-front,.foto-flip-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radio-medio);overflow:hidden;}
+    .foto-flip-front img{width:100%;height:100%;object-fit:cover;}
+    .foto-flip-back{transform:rotateY(180deg);background:linear-gradient(145deg,var(--borgona),#c2185b);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2rem;text-align:center;}
+    .foto-flip-back .flip-corazon{font-size:3rem;margin-bottom:1rem;animation:latido 1.5s ease infinite;}
+    .foto-flip-back .dedicatoria{font-family:'Dancing Script',cursive;font-size:clamp(1.1rem,2.5vw,1.6rem);color:#fff;line-height:1.4;text-shadow:0 2px 10px rgba(0,0,0,0.3);}
+    .separador{display:flex;align-items:center;justify-content:center;gap:1.5rem;padding:3rem 2rem;color:var(--rosa-fuerte);}
+    .separador-linea{flex:1;max-width:200px;height:1px;background:linear-gradient(to right,transparent,var(--rosa-medio));}
+    .separador-linea.der{background:linear-gradient(to left,transparent,var(--rosa-medio));}
+    .separador-icono{font-size:2rem;animation:latido 2s ease infinite;}
+    .carta-final-seccion{padding:clamp(4rem,8vw,8rem) clamp(1rem,5vw,3rem);background:linear-gradient(160deg,#fff8f0 0%,#fce4ec 50%,#f8e1f4 100%);position:relative;overflow:hidden;}
+    /* ── LIBRO DE 2 PÁGINAS ── */
+    .libro-wrapper{max-width:820px;margin:0 auto;}
+    /* Indicador de página */
+    .libro-nav{display:flex;justify-content:center;align-items:center;gap:1.5rem;margin-bottom:2rem;}
+    .libro-btn{background:linear-gradient(135deg,var(--borgona),#c2185b);color:#fff;border:none;padding:0.6rem 1.8rem;border-radius:100px;font-family:'Poppins',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;box-shadow:0 4px 15px rgba(136,14,79,0.35);transition:transform 0.2s ease,box-shadow 0.2s ease,opacity 0.2s ease;letter-spacing:0.04em;}
+    .libro-btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(136,14,79,0.45);}
+    .libro-btn:disabled{opacity:0.35;cursor:default;transform:none;}
+    .libro-indicador{font-family:'Dancing Script',cursive;font-size:1.2rem;color:var(--borgona);min-width:90px;text-align:center;}
+    /* Contenedor con perspectiva para el flip */
+    .libro-perspectiva{perspective:1600px;}
+    /* Cada página */
+    .libro-pagina{background:linear-gradient(160deg,#fffdf7,#fff8ee,#fffdf7);border-radius:1.5rem;padding:clamp(2rem,6vw,5rem) clamp(1.5rem,5vw,4.5rem);box-shadow:0 0 0 1px rgba(212,168,85,0.3),0 0 0 4px rgba(212,168,85,0.08),0 20px 60px rgba(0,0,0,0.12),inset 0 0 80px rgba(212,168,85,0.06);position:relative;transition:transform 0.85s cubic-bezier(0.4,0,0.2,1),opacity 0.4s ease;transform-origin:center center;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+    .libro-pagina::before,.libro-pagina::after{content:'';position:absolute;top:0.8rem;bottom:0.8rem;width:3px;background:linear-gradient(to bottom,transparent,var(--dorado),var(--dorado),transparent);opacity:0.4;}
+    .libro-pagina::before{left:0.8rem;}
+    .libro-pagina::after{right:0.8rem;}
+    /* Estado OCULTO: la página sale girando */
+    .libro-pagina.saliendo{transform:rotateY(-90deg) scale(0.92);opacity:0;pointer-events:none;position:absolute;inset:0;}
+    /* Estado ENTRANDO: llega girando desde el otro lado */
+    .libro-pagina.entrando{transform:rotateY(90deg) scale(0.92);opacity:0;pointer-events:none;position:absolute;inset:0;}
+    /* Estilo compartido de los elementos de la carta */
+    .pergamino-deco{text-align:center;font-size:1.5rem;color:var(--dorado);opacity:0.6;margin:1rem 0;letter-spacing:0.4rem;}
+    .carta-encabezado{font-family:'Dancing Script',cursive;font-size:clamp(1.6rem,4vw,2.5rem);color:var(--borgona);text-align:center;margin-bottom:0.3rem;}
+    .carta-fecha{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(0.8rem,1.5vw,0.95rem);color:var(--dorado);text-align:center;margin-bottom:2rem;}
+    .carta-linea-div{width:60%;height:1px;background:linear-gradient(to right,transparent,var(--dorado),transparent);margin:0 auto 2rem;}
+    .carta-cuerpo{font-family:'Playfair Display',serif;font-size:clamp(1rem,2vw,1.15rem);color:var(--texto-oscuro);line-height:1.9;text-align:justify;}
+    .carta-cuerpo p{margin-bottom:1.3rem;text-indent:2em;}
+    .carta-cuerpo p:first-child{text-indent:0;}
+    .carta-firma{margin-top:2.5rem;text-align:right;}
+    .carta-firma-nombre{font-family:'Dancing Script',cursive;font-size:clamp(1.8rem,4vw,2.8rem);color:var(--borgona);line-height:1.1;}
+    .carta-firma-detalle{font-family:'Playfair Display',serif;font-style:italic;font-size:0.9rem;color:var(--texto-gris);}
+    /* Segunda página — fondo levemente diferente */
+    #pagina-2{background:linear-gradient(160deg,#fef9f0,#fff4e6,#fef9f0);}
+    #pagina-2 .carta-encabezado{color:#6b3a1f;}
+    #pagina-2 .carta-cuerpo{color:#3a2010;}
+    #pagina-2 .carta-firma-nombre{color:#6b3a1f;}
+    footer{background:linear-gradient(135deg,var(--borgona),#c2185b);color:rgba(255,255,255,0.9);text-align:center;padding:3rem 2rem;font-family:'Dancing Script',cursive;font-size:clamp(1.2rem,3vw,1.8rem);}
+    footer p{margin-bottom:0.3rem;}
+    footer .fe{font-size:2rem;animation:latido 1.5s ease infinite;}
+    #btn-musica{position:fixed;bottom:2rem;right:2rem;z-index:998;width:3.5rem;height:3.5rem;border-radius:50%;background:linear-gradient(135deg,var(--rosa-fuerte),var(--borgona));border:2px solid rgba(255,255,255,0.4);color:white;font-size:1.4rem;cursor:pointer;box-shadow:0 6px 20px rgba(136,14,79,0.45);display:flex;align-items:center;justify-content:center;transition:transform 0.3s ease,box-shadow 0.3s ease;opacity:0;pointer-events:none;}
+    #btn-musica.mostrar{opacity:1;pointer-events:all;}
+    #btn-musica:hover{transform:scale(1.15);box-shadow:0 10px 30px rgba(136,14,79,0.6);}
+    #btn-musica.sonando{animation:girar 3s linear infinite;}
+    @keyframes girar{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+    @media(max-width:600px){.foto-wide{grid-column:span 1;flex-direction:column;min-height:unset;}.foto-wide img{width:100%;height:220px;}}
+    @media(max-width:480px){.foto-grid{grid-template-columns:1fr;}}
+    @media(min-width:900px){.foto-grid{grid-template-columns:repeat(3,1fr);}}
+    /* Libro responsive */
+    @media(max-width:600px){.libro-btn{padding:0.5rem 1.2rem;font-size:0.8rem;}.libro-indicador{font-size:1rem;}}
+    .libro-contenedor{position:relative;min-height:200px;perspective:1400px;}
+  </style>
+</head>
+<body>
+<!--
+  AUDIO: iOS Safari requiere que play() se llame directamente
+  dentro del handler del evento touch/click del usuario.
+  NO usar preload="auto" en iOS (se ignora y puede causar errores).
+-->
+<audio id="audio-fondo" loop preload="metadata" playsinline webkit-playsinline>
+  <!--
+    CANCION: Manuel Medrano - Donde Nadie Pueda Ir
+    dl=1 al final del link de Dropbox = stream directo del MP3
+  -->
+  <source src="medrano.mp3" type="audio/mpeg" />
+</audio>
+<canvas id="particles-canvas" aria-hidden="true"></canvas>
+<button id="btn-musica" aria-label="Reproducir o pausar musica" title="Musica">🎵</button>
+<section id="pantalla-inicio" aria-label="Pantalla de bienvenida">
+  <h1 class="titulo-inicio">Para ti,<br>mi cielo ❤️</h1>
+  <p class="subtitulo-inicio">Un pequeño rincón lleno de amor y recuerdos</p>
+  <div class="sobre-wrapper" id="sobre-anim" role="img" aria-label="Sobre animado">
+    <div class="sobre">
+      <div class="sobre-cuerpo"></div>
+      <div class="sobre-frente"><span class="corazon-sobre">💌</span></div>
+      <div class="sobre-solapa"></div>
+      <div class="carta-interna">Con todo<br>mi amor 💕</div>
+    </div>
+  </div>
+  <button id="btn-comenzar" aria-label="Abrir el album">💖 Abrir mi sorpresa</button>
+</section>
+<main id="album-principal">
+  <header class="album-header">
+    <h2 class="album-titulo">Nuestro<br>Álbum de Recuerdos</h2>
+    <p class="album-subtitulo">Cada foto es un momento que guardo en el corazón,<br>cada sonrisa tuya, mi razón favorita para sonreír.</p>
+    <div class="linea-decorativa"><span></span><span>🌹</span><span></span></div>
+    <div class="scroll-hint" aria-hidden="true"><span>Desliza para ver</span><span>↓</span></div>
+  </header>
+  <section class="galeria-seccion" aria-label="Galeria de fotos">
+    <h2 class="seccion-titulo">Momentos que atesoro</h2>
+    <p class="seccion-subtitulo">Doce instantes que guardan nuestra historia</p>
+    <div class="foto-grid">
+
+      <!-- FOTO 1 - POLAROID rotacion positiva / fade-up -->
+      <div class="foto-item anim-fade-up">
+        <div class="foto-polaroid polaroid-rot-pos">
+          <!-- COLOCAR ENLACE DE FOTO 1 AQUI -->
+          <img src="https://i.postimg.cc/pLSznmKg/5012536484854172899-121.jpg" alt="Primera foto" loading="lazy" />
+          <p class="dedicatoria">El día que todo comenzó 💫</p>
+        </div>
+      </div>
+
+      <!-- FOTO 2 - ELEGANTE redondeada / zoom-in -->
+      <div class="foto-item anim-zoom-in">
+        <div class="foto-elegante">
+          <!-- COLOCAR ENLACE DE FOTO 2 AQUI -->
+          <img src="https://i.postimg.cc/6QDrF83g/5012536484854172892-121.jpg" alt="Foto romantica" loading="lazy" />
+          <div class="dedicatoria">Eres lo más bonito que me ha pasado 🌸</div>
+        </div>
+      </div>
+
+      <!-- FOTO 3 - OVERLAY hover / slide-right -->
+      <div class="foto-item anim-slide-right">
+        <div class="foto-overlay">
+          <!-- COLOCAR ENLACE DE FOTO 3 AQUI -->
+          <img src="https://i.postimg.cc/Qt1QDjKN/5012536484854172893-121.jpg" alt="Momento especial" loading="lazy" />
+          <div class="overlay-capa">
+            <p class="dedicatoria">Pasa el cursor y descubre lo que siento ✨</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOTO 4 - POLAROID rotacion negativa / fade-up -->
+      <div class="foto-item anim-fade-up" style="transition-delay:0.1s">
+        <div class="foto-polaroid polaroid-rot-neg">
+          <!-- COLOCAR ENLACE DE FOTO 4 AQUI -->
+          <img src="https://i.postimg.cc/jS1PJDzV/5012536484854172900-121.jpg" alt="Recuerdo especial" loading="lazy" />
+          <p class="dedicatoria">Tus ojos son mi lugar favorito 🥺</p>
+        </div>
+      </div>
+
+      <!-- FOTO 5 - FLIP 3D (hover voltea la carta) / flip -->
+      <div class="foto-item anim-flip">
+        <div class="foto-flip-container">
+          <div class="foto-flip-inner">
+            <div class="foto-flip-front">
+              <!-- COLOCAR ENLACE DE FOTO 5 AQUI -->
+              <img src="https://i.postimg.cc/Qdz1WFp8/5012536484854172901-121.jpg" alt="Voltea para ver la dedicatoria" loading="lazy" />
+            </div>
+            <div class="foto-flip-back">
+              <span class="flip-corazon">💕</span>
+              <p class="dedicatoria">Eres mi calma en medio del caos, mi favorita siempre</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOTO 6 - OVERLAY hover / slide-left -->
+      <div class="foto-item anim-slide-left">
+        <div class="foto-overlay">
+          <!-- COLOCAR ENLACE DE FOTO 6 AQUI -->
+          <img src="https://i.postimg.cc/wvLXz9Rt/5012536484854172894-121.jpg" alt="Un momento precioso" loading="lazy" />
+          <div class="overlay-capa">
+            <p class="dedicatoria">Cada segundo a tu lado vale más que mil palabras 🌙</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOTO 7 - WIDE (2 columnas desktop) / zoom-in -->
+      <div class="foto-item anim-zoom-in foto-wide">
+        <!-- COLOCAR ENLACE DE FOTO 7 AQUI -->
+        <img src="https://i.postimg.cc/RFK7mvJJ/5012536484854172895-121.jpg" alt="Nuestra foto favorita" loading="lazy" />
+        <div class="wide-texto">
+          <p class="wide-titulo">Mi momento favorito 🌅</p>
+          <p class="dedicatoria">Hay fotos que valen más que mil palabras. Esta es una de ellas. Cada vez que la veo, recuerdo todo lo que sentí y lo mucho que te quiero.</p>
+          <div class="corazon-deco">❤️</div>
+        </div>
+      </div>
+
+      <!-- FOTO 8 - POLAROID suave + tarjeta cita / fade-up -->
+      <!-- Este wrapper se estira para igualar la altura del wide card de foto 7 -->
+      <div class="foto-item anim-fade-up" style="align-self:stretch">
+        <div class="foto8-columna">
+          <!-- La foto polaroid -->
+          <div class="foto-polaroid polaroid-rot-pos2">
+            <!-- COLOCAR ENLACE DE FOTO 8 AQUI -->
+            <img src="https://i.postimg.cc/YCPYmv1G/5012536484854172902-121.jpg" alt="Recuerdo especial" loading="lazy" />
+            <p class="dedicatoria">Robarte una sonrisa, mi pasatiempo favorito 😊</p>
+          </div>
+          <!-- Tarjeta animada que llena el espacio restante -->
+          <div class="tarjeta-cita">
+            <span class="cita-corazon">💕</span>
+            <p class="cita-texto">"Contigo cada instante ordinario se vuelve el favorito de mi vida"</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOTO 9 - ELEGANTE redondeada / slide-right -->
+      <div class="foto-item anim-slide-right">
+        <div class="foto-elegante">
+          <!-- COLOCAR ENLACE DE FOTO 9 AQUI -->
+          <img src="https://i.postimg.cc/JnZN8RHX/5012536484854172896-121.jpg" alt="Foto romantica" loading="lazy" />
+          <div class="dedicatoria">Contigo todo tiene más color 🌈</div>
+        </div>
+      </div>
+
+      <!-- FOTO 10 - FLIP 3D / zoom-in -->
+      <div class="foto-item anim-zoom-in">
+        <div class="foto-flip-container">
+          <div class="foto-flip-inner">
+            <div class="foto-flip-front">
+              <!-- COLOCAR ENLACE DE FOTO 10 AQUI -->
+              <img src="https://i.postimg.cc/bw5k2ZQG/5130075171216624889-121.jpg" alt="Voltea para ver la dedicatoria" loading="lazy" />
+            </div>
+            <div class="foto-flip-back">
+              <span class="flip-corazon">🌸</span>
+              <p class="dedicatoria">Gracias por elegirme cada día. Eres mi mejor decisión.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOTO 11 - OVERLAY hover / fade-up -->
+      <div class="foto-item anim-fade-up">
+        <div class="foto-overlay">
+          <!-- COLOCAR ENLACE DE FOTO 11 AQUI -->
+          <img src="https://i.postimg.cc/kXfxq1Gb/5012536484854172897-121.jpg" alt="Momento magico" loading="lazy" />
+          <div class="overlay-capa">
+            <p class="dedicatoria">Eres el sueño que nunca quiero dejar de soñar 🌟</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOTO 12 - PANORÁMICA final (ocupa las 3 columnas) / zoom-in -->
+      <div class="foto-item anim-zoom-in foto-panoramica">
+        <!-- COLOCAR ENLACE DE FOTO 12 AQUI -->
+        <img src="https://i.postimg.cc/dVfrTh8C/5130075171216624890-121.jpg" alt="Ultima foto especial" loading="lazy" />
+        <div class="wide-texto">
+          <p class="wide-titulo">Y que vengan muchos más momentos así 💞</p>
+          <p class="dedicatoria">
+            Cada foto de este álbum es un pedacito de nuestra historia.
+            Gracias por llenar mi vida de momentos tan bonitos.
+          </p>
+          <div class="corazon-deco">❤️ 💕 ❤️</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="separador" aria-hidden="true">
+    <div class="separador-linea"></div>
+    <span class="separador-icono">💌</span>
+    <div class="separador-linea der"></div>
+  </div>
+
+  <section class="carta-final-seccion" aria-label="Carta de amor final">
+    <h2 class="seccion-titulo">Mi carta para ti</h2>
+    <p class="seccion-subtitulo">Palabras que el corazón no puede callar</p>
+
+    <!-- ═══════════════════════════════════════════════════════
+         LIBRO DE 2 PÁGINAS CON FLIP ANIMADO
+         ═══════════════════════════════════════════════════════ -->
+    <div class="libro-wrapper foto-item anim-zoom-in">
+
+      <!-- Navegación entre páginas -->
+      <nav class="libro-nav" aria-label="Navegación del libro">
+        <button class="libro-btn" id="btn-pagina-ant" disabled aria-label="Página anterior">
+          ← Página anterior
+        </button>
+        <span class="libro-indicador" id="libro-indicador" aria-live="polite">Página 1 / 2</span>
+        <button class="libro-btn" id="btn-pagina-sig" aria-label="Página siguiente">
+          Página siguiente →
+        </button>
+      </nav>
+
+      <!-- Contenedor con posición relativa para el overlay durante el flip -->
+      <div class="libro-contenedor">
+
+        <!-- ══════════════════
+             PÁGINA 1
+             ══════════════════ -->
+        <article class="libro-pagina" id="pagina-1" aria-label="Carta - Página 1">
+          <div class="pergamino-deco" aria-hidden="true">✦ &nbsp; ✦ &nbsp; ✦</div>
+          <h3 class="carta-encabezado">Para mi amor,</h3>
+          <!-- CAMBIA LA FECHA AQUI -->
+          <p class="carta-fecha">Julio de 2026 · Con todo mi corazón</p>
+          <div class="carta-linea-div" aria-hidden="true"></div>
+          <!--
+            ============================================================
+            REDACTA TU CARTA EN LA PÁGINA 1 AQUI
+            Reemplaza estos parrafos con tus propias palabras.
+            Puedes agregar tantos <p> como necesites.
+            ============================================================
+          -->
+          <div class="carta-cuerpo" id="carta-texto">
+            <p>Hay cosas que uno no sabe cómo decir con palabras, cosas que viven en ese lugar del pecho donde se guardan los momentos que realmente importan. Escribirte esto es un intento de poner en letras todo aquello que siento cada vez que estás cerca, cada vez que me miras, cada vez que sonríes.</p>
+            <p><!-- ESCRIBE AQUI TU SEGUNDO PARRAFO -->
+            Desde el primer día que apareciste en mi vida, algo cambió. No sé si fue tu forma de reír, o la manera en que escuchas, o simplemente esa energía tuya que hace que el mundo se sienta más bonito. Lo que sé es que contigo, todo es diferente y todo es mejor.</p>
+            <p><!-- ESCRIBE AQUI TU TERCER PARRAFO -->
+            Estas fotos son solo una pequeña muestra de los momentos que atesoro. Cada imagen guarda una emoción, un instante que quiero recordar para siempre. Porque junto a ti he aprendido que los mejores recuerdos no son los grandes eventos, sino los pequeños momentos cotidianos que compartimos sin darnos cuenta.</p>
+            <p><!-- ESCRIBE AQUI TU CUARTO PARRAFO -->
+            Quiero que sepas que eres la persona más importante en mi vida. Que pienso en ti antes de dormir y que tu recuerdo es lo primero que me alegra el día. Que me haces querer ser mejor, y que a tu lado me siento completo.</p>
+            <p><!-- ESCRIBE AQUI TU PARRAFO FINAL (pagina 1) -->
+            Gracias por existir, por elegirme, por quedarte. Gracias por cada abrazo, por cada palabra, por cada silencio cómodo a tu lado. Te amo más de lo que estas palabras pueden expresar, y prometo seguir demostrándotelo cada día que me regale la vida.</p>
+          </div>
+          <div class="carta-firma">
+            <!-- CAMBIA TU NOMBRE AQUI -->
+            <p class="carta-firma-nombre">Con todo mi amor,</p>
+            <p class="carta-firma-nombre" style="font-size:clamp(2rem,5vw,3.5rem)">Carlos Daniel 💕</p>
+            <p class="carta-firma-detalle">Te amo hoy, mañana y siempre</p>
+          </div>
+          <div class="pergamino-deco" aria-hidden="true">✦ &nbsp; ✦ &nbsp; ✦</div>
+        </article>
+
+        <!-- ══════════════════
+             PÁGINA 2 (inicialmente oculta)
+             ══════════════════ -->
+        <article class="libro-pagina entrando" id="pagina-2" aria-label="Carta - Página 2" aria-hidden="true" style="display:none;">
+          <div class="pergamino-deco" aria-hidden="true">❀ &nbsp; ❀ &nbsp; ❀</div>
+          <h3 class="carta-encabezado">...y además quiero decirte</h3>
+          <p class="carta-fecha">Continuación · Desde lo más profundo</p>
+          <div class="carta-linea-div" aria-hidden="true"></div>
+          <!--
+            ============================================================
+            REDACTA TU CARTA EN LA PÁGINA 2 AQUI
+            Esta es tu segunda hoja. Escribe lo que quieras.
+            Puedes agregar tantos <p> como necesites.
+            ============================================================
+          -->
+          <div class="carta-cuerpo" id="carta-texto-2">
+            <p>Hay algo que nunca voy a poder explicarte con exactitud amor, y es la manera en la que cambias mi mundo sin hacer el más mínimo esfuerzo. No necesito que hagas cosas extraordinarias para enamorarme de ti una vez más; me basta con saber que existes, con imaginar tu risa, tus abrazos así súper ricooo o esos besitos tan tiernos, con recordar la forma en la que tus ojos brillan cuando sonríes o con pensar que, entre todas las historias, las posibilidades, decidió cruzar la mía con la tuya. Desde entonces entendí que mi lugar favorito no es un sitio, sino cualquier momento en el que tú estés, especialmente estar entre tus brazos (obvio también cuando comemos amor).</p>
+            <p>Si mi corazón pudiera hablar, repetiría tu nombre una y otra vez, porque en cada latido aprendió a quererte un poco más. No quiero prometerte un amor perfecto, quiero prometerte un amor que nunca deje de elegirte, incluso cuando el tiempo pase, cuando los días sean difíciles o cuando las palabras no alcancen para decir todo lo que siento. Quiero ser siempre esa persona que te haga sentir segura, querida y profundamente amada, porque para mí no existe nada más bonito que cuidar el corazón que logró convertirse en el hogar del mío.</p>
+            <p>Y si algún día alguien me preguntara cuál fue el milagro más grande que viví, respondería sin pensarlo que fue encontrarte, y que a pesar de tantas cosas que pasaron entre nosotros siempre nos elegimos, porque desde que llegaste descubrí que el amor no siempre hace ruido; a veces simplemente toma tu mano, sonríe y convierte una vida cualquiera en la historia más bonita que jamás imaginaste vivir. Te amo de una forma tan inmensa que, aunque existieran mil vidas, en cada una volvería a buscarte hasta encontrarte otra vez. Te amoooo hoy, mañana y siempre cielo. 🌹❤️</p>
+          </div>
+          <div class="carta-firma">
+            <p class="carta-firma-nombre">Para siempre tuyo,</p>
+            <!-- CAMBIA TU NOMBRE AQUI TAMBIEN -->
+            <p class="carta-firma-nombre" style="font-size:clamp(2rem,5vw,3.5rem)">Carlos Daniel 🌹</p>
+            <p class="carta-firma-detalle">Con todo lo que soy ❤️</p>
+          </div>
+          <div class="pergamino-deco" aria-hidden="true">❀ &nbsp; ❀ &nbsp; ❀</div>
+        </article>
+
+      </div><!-- /libro-contenedor -->
+    </div><!-- /libro-wrapper -->
+
+  </section>
+
+  <footer>
+    <p class="fe">❤️</p>
+    <p>Hecho con amor, solo para ti</p>
+    <p style="font-size:1rem;margin-top:0.5rem;opacity:0.8">Cada píxel de esta página fue pensado en ti 🌹</p>
+  </footer>
+</main>
+<script>
+'use strict';
+(function(){
+  var canvas=document.getElementById('particles-canvas');
+  var ctx=canvas.getContext('2d');
+  var parts=[];
+  var SYM=['❤','💕','✨','🌸','💫','🌹'];
+  function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+  window.addEventListener('resize',resize);resize();
+  function newP(rY){return{x:Math.random()*canvas.width,y:rY?Math.random()*canvas.height:canvas.height+30,size:Math.random()*14+8,sy:Math.random()*0.8+0.3,sx:(Math.random()-0.5)*0.5,op:Math.random()*0.45+0.2,sym:SYM[Math.floor(Math.random()*SYM.length)],rot:Math.random()*Math.PI*2,rs:(Math.random()-0.5)*0.02};}
+  for(var i=0;i<25;i++)parts.push(newP(true));
+  function tick(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(var i=0;i<parts.length;i++){
+      var p=parts[i];p.y-=p.sy;p.x+=p.sx;p.rot+=p.rs;
+      ctx.save();ctx.globalAlpha=p.op;ctx.font=p.size+'px serif';
+      ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillText(p.sym,-p.size/2,p.size/2);ctx.restore();
+      if(p.y<-40||p.x<-40||p.x>canvas.width+40)parts[i]=newP(false);
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+(function(){
+  var intro=document.getElementById('pantalla-inicio');
+  for(var i=0;i<55;i++){
+    var s=document.createElement('span');s.className='estrella';
+    var t=Math.random()*3+1;
+    s.style.cssText='width:'+t+'px;height:'+t+'px;top:'+(Math.random()*100)+'%;left:'+(Math.random()*100)+'%;animation-delay:'+(Math.random()*3)+'s;animation-duration:'+(Math.random()*2+1.5)+'s;';
+    intro.appendChild(s);
+  }
+})();
+var pantalla=document.getElementById('pantalla-inicio');
+var album=document.getElementById('album-principal');
+var btnC=document.getElementById('btn-comenzar');
+var sobre=document.getElementById('sobre-anim');
+var btnM=document.getElementById('btn-musica');
+var audio=document.getElementById('audio-fondo');
+/* ----------------------------------------------------------
+   AUDIO — compatible con iOS Safari
+   En iOS, play() DEBE llamarse sincrónicamente dentro del
+   handler de touch/click. Cualquier setTimeout o audio.load()
+   antes del play() rompe la cadena del gesto y el audio falla.
+   ---------------------------------------------------------- */
+var mI=false,mA=false;
+
+// Sobre animado (abrir/cerrar con hover y click)
+sobre.addEventListener('mouseenter',function(){sobre.classList.add('abierto');});
+sobre.addEventListener('mouseleave',function(){sobre.classList.remove('abierto');});
+sobre.addEventListener('click',function(){sobre.classList.toggle('abierto');});
+
+// 1. ELIMINA O COMENTA ESTA LÍNEA (El causante del conflicto en iOS)
+// btnC.addEventListener('touchstart', function(){}, {passive:true});
+
+btnC.addEventListener('click', function(e) {
+  e.preventDefault(); // Evita cualquier comportamiento por defecto del navegador
+
+  // 1. FORZAR LA TRANSICIÓN VISUAL PRIMERO
+  // Cambiamos los estilos directamente para no depender solo de las clases
+  pantalla.style.opacity = '0';
+  pantalla.style.pointerEvents = 'none';
+  pantalla.style.transform = 'scale(1.06)';
+
+  album.style.opacity = '1';
+  album.style.transform = 'translateY(0)';
+  album.style.pointerEvents = 'all';
+  album.classList.add('visible');
+
+  btnM.classList.add('mostrar');
+
+  // Remover la pantalla inicial del DOM después de que termine la animación
+  setTimeout(function() {
+    pantalla.style.display = 'none';
+  }, 900);
+
+  // 2. INTENTAR REPRODUCIR EL AUDIO EN UN BLOQUE AISLADO
+  try {
+    if (!mI) {
+      mI = true;
+      audio.volume = 0.4;
+      var promesa = audio.play();
+      
+      if (promesa !== undefined) {
+        promesa.then(function() {
+          // Si el audio carga con éxito
+          mA = true;
+          btnM.classList.add('sonando');
+          btnM.textContent = '🎶';
+        }).catch(function(err) {
+          // Si iOS bloquea el audio, capturamos el error silenciosamente
+          console.warn('El audio fue bloqueado por iOS:', err);
+          mI = false;
+          btnM.textContent = '🎵';
+        });
+      }
+    }
+  } catch (err) {
+    console.error('Fallo general del reproductor multimedia:', err);
+    mI = false;
+  }
+});
+
+// Botón flotante de música (pausa / reanuda)
+btnM.addEventListener('touchstart', function(){}, {passive:true});
+btnM.addEventListener('click', function(){
+  if (!mI) {
+    // Primera vez: iniciar música
+    mI = true;
+    audio.volume = 0.4;
+    var p = audio.play();
+    if (p !== undefined) {
+      p.then(function(){ mA=true; btnM.classList.add('sonando'); btnM.textContent='🎶'; })
+       .catch(function(){ mI=false; btnM.textContent='🎵'; });
+    }
+    return;
+  }
+  if (mA) {
+    audio.pause();
+    mA = false;
+    btnM.classList.remove('sonando');
+    btnM.textContent = '🎵';
+  } else {
+    audio.play();
+    mA = true;
+    btnM.classList.add('sonando');
+    btnM.textContent = '🎶';
+  }
+});
+var obs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{rootMargin:'0px 0px -60px 0px',threshold:0.12});
+document.querySelectorAll('.foto-item').forEach(function(el){obs.observe(el);});
+
+/* ----------------------------------------------------------
+   LIBRO DE 2 PÁGINAS CON FLIP ANIMADO
+   ---------------------------------------------------------- */
+(function(){
+  var paginaActual = 1;
+  var totalPaginas = 2;
+  var enTransicion = false;
+  var DURACION = 500; // ms — debe coincidir aprox. con la mitad de la transición CSS
+
+  var pagina1   = document.getElementById('pagina-1');
+  var pagina2   = document.getElementById('pagina-2');
+  var btnAnt    = document.getElementById('btn-pagina-ant');
+  var btnSig    = document.getElementById('btn-pagina-sig');
+  var indicador = document.getElementById('libro-indicador');
+
+  function getPagina(n) { return n === 1 ? pagina1 : pagina2; }
+
+  function actualizarNav() {
+    btnAnt.disabled = (paginaActual === 1);
+    btnSig.disabled = (paginaActual === totalPaginas);
+    indicador.textContent = 'Página ' + paginaActual + ' / ' + totalPaginas;
+  }
+
+  function irAPagina(destino) {
+    if (enTransicion || destino === paginaActual) return;
+    enTransicion = true;
+
+    var paginaSale  = getPagina(paginaActual);
+    var paginaEntra = getPagina(destino);
+    var yendoAdelante = (destino > paginaActual);
+
+    // 1. Mostrar la página que entra y darle posición inicial fuera de vista
+    paginaEntra.style.display = 'block';
+    paginaEntra.classList.remove('entrando', 'saliendo');
+    // Forzar reflow para que el display:block se aplique antes de la transición
+    void paginaEntra.offsetHeight;
+    paginaEntra.style.position = 'absolute';
+    paginaEntra.style.inset = '0';
+    paginaEntra.style.opacity = '0';
+    paginaEntra.style.transform = yendoAdelante
+      ? 'rotateY(90deg) scale(0.92)'
+      : 'rotateY(-90deg) scale(0.92)';
+    paginaEntra.setAttribute('aria-hidden', 'false');
+
+    // 2. Dar vuelta la página actual hacia afuera
+    paginaSale.style.transition = 'transform 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.35s ease';
+    paginaSale.style.transform = yendoAdelante
+      ? 'rotateY(-90deg) scale(0.92)'
+      : 'rotateY(90deg) scale(0.92)'
+    paginaSale.style.opacity = '0';
+    paginaSale.style.pointerEvents = 'none';
+
+    // 3. Cuando la página sale a la mitad, mostrar la nueva
+    setTimeout(function() {
+      paginaSale.style.position = 'absolute';
+      paginaSale.style.inset = '0';
+
+      paginaEntra.style.transition = 'transform 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.35s ease';
+      paginaEntra.style.transform = 'rotateY(0deg) scale(1)';
+      paginaEntra.style.opacity = '1';
+      paginaEntra.style.position = 'relative';
+      paginaEntra.style.inset = '';
+      paginaEntra.style.pointerEvents = '';
+    }, DURACION);
+
+    // 4. Limpiar estados después del flip completo
+    setTimeout(function() {
+      paginaSale.style.transition = '';
+      paginaSale.style.display = 'none';
+      paginaSale.setAttribute('aria-hidden', 'true');
+
+      paginaActual = destino;
+      actualizarNav();
+      enTransicion = false;
+    }, DURACION * 2 + 50);
+  }
+
+  btnSig.addEventListener('click', function() { irAPagina(paginaActual + 1); });
+  btnAnt.addEventListener('click', function() { irAPagina(paginaActual - 1); });
+
+  // Estado inicial
+  actualizarNav();
+})();
+</script>
+</body>
+</html>
