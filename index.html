@@ -89,7 +89,7 @@
     .foto-panoramica .wide-titulo{font-family:'Dancing Script',cursive;font-size:clamp(1.6rem,3.5vw,2.4rem);color:var(--borgona);margin-bottom:0.7rem;}
     .foto-panoramica .dedicatoria{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(0.9rem,1.8vw,1.1rem);color:var(--texto-gris);line-height:1.7;max-width:420px;}
     .foto-panoramica .corazon-deco{margin-top:1rem;font-size:2rem;animation:latido 1.8s ease-in-out infinite;}
-    @media(max-width:600px){.foto-panoramica{flex-direction:column;min-height:unset;}.foto-panoramica img{width:100%;height:220px;}}
+    @media(max-width:600px){.foto-panoramica{flex-direction:column;min-height:unset;}.foto-panoramica img{width:100%;height:220px;object-position:top;}}
     .foto-wide:hover{transform:scale(1.015);}
     /* Columna para foto 8: ocupa toda la altura del row junto a la wide */
     .foto8-columna{display:flex;flex-direction:column;gap:clamp(1rem,2vw,1.5rem);height:100%;}
@@ -159,15 +159,39 @@
     #btn-musica:hover{transform:scale(1.15);box-shadow:0 10px 30px rgba(136,14,79,0.6);}
     #btn-musica.sonando{animation:girar 3s linear infinite;}
     @keyframes girar{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-    @media(max-width:600px){.foto-wide{grid-column:span 1;flex-direction:column;min-height:unset;}.foto-wide img{width:100%;height:220px;}}
+    @media(max-width:600px){.foto-wide{grid-column:span 1;flex-direction:column;min-height:unset;}.foto-wide img{width:100%;height:220px;object-position:top;}}
     @media(max-width:480px){.foto-grid{grid-template-columns:1fr;}}
     @media(min-width:900px){.foto-grid{grid-template-columns:repeat(3,1fr);}}
     /* Libro responsive */
     @media(max-width:600px){.libro-btn{padding:0.5rem 1.2rem;font-size:0.8rem;}.libro-indicador{font-size:1rem;}}
     .libro-contenedor{position:relative;min-height:200px;perspective:1400px;}
+    /* Pantalla de carga */
+    #pantalla-carga {
+      position: fixed; inset: 0; z-index: 10000;
+      background: var(--crema);
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    #pantalla-carga.oculto { opacity: 0; visibility: hidden; }
+    .spinner-carga {
+      width: 60px; height: 60px;
+      border: 6px solid var(--rosa-suave); border-top-color: var(--rosa-fuerte);
+      border-radius: 50%;
+      animation: girar-spinner 1s linear infinite; margin-bottom: 20px;
+    }
+    @keyframes girar-spinner { to { transform: rotate(360deg); } }
+    .texto-carga {
+      font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: var(--borgona);
+      animation: latido 1.2s ease-in-out infinite;
+    }
   </style>
 </head>
 <body>
+<!-- Pantalla de Carga -->
+<div id="pantalla-carga" aria-label="Pantalla de carga">
+  <div class="spinner-carga"></div>
+  <div class="texto-carga">Cargando...</div>
+</div>
 <!--
   AUDIO: iOS Safari requiere que play() se llame directamente
   dentro del handler del evento touch/click del usuario.
@@ -211,8 +235,8 @@
       <div class="foto-item anim-fade-up">
         <div class="foto-polaroid polaroid-rot-pos">
           <!-- COLOCAR ENLACE DE FOTO 1 AQUI -->
-          <img src="https://i.postimg.cc/pLSznmKg/5012536484854172899-121.jpg" alt="Primera foto" loading="lazy" />
-          <p class="dedicatoria">El día que todo comenzó 💫</p>
+          <img src="https://i.postimg.cc/pLSznmKg/5012536484854172899-121.jpg" alt="Primera foto" loading="eager" />
+          <p class="dedicatoria">Un besito lleno de amor 💫</p>
         </div>
       </div>
 
@@ -220,7 +244,7 @@
       <div class="foto-item anim-zoom-in">
         <div class="foto-elegante">
           <!-- COLOCAR ENLACE DE FOTO 2 AQUI -->
-          <img src="https://i.postimg.cc/6QDrF83g/5012536484854172892-121.jpg" alt="Foto romantica" loading="lazy" />
+          <img src="https://i.postimg.cc/6QDrF83g/5012536484854172892-121.jpg" alt="Foto romantica" loading="eager" />
           <div class="dedicatoria">Eres lo más bonito que me ha pasado 🌸</div>
         </div>
       </div>
@@ -229,7 +253,7 @@
       <div class="foto-item anim-slide-right">
         <div class="foto-overlay">
           <!-- COLOCAR ENLACE DE FOTO 3 AQUI -->
-          <img src="https://i.postimg.cc/Qt1QDjKN/5012536484854172893-121.jpg" alt="Momento especial" loading="lazy" />
+          <img src="https://i.postimg.cc/Qt1QDjKN/5012536484854172893-121.jpg" alt="Momento especial" loading="eager" />
           <div class="overlay-capa">
             <p class="dedicatoria">Pasa el cursor y descubre lo que siento ✨</p>
           </div>
@@ -240,7 +264,7 @@
       <div class="foto-item anim-fade-up" style="transition-delay:0.1s">
         <div class="foto-polaroid polaroid-rot-neg">
           <!-- COLOCAR ENLACE DE FOTO 4 AQUI -->
-          <img src="https://i.postimg.cc/jS1PJDzV/5012536484854172900-121.jpg" alt="Recuerdo especial" loading="lazy" />
+          <img src="https://i.postimg.cc/jS1PJDzV/5012536484854172900-121.jpg" alt="Recuerdo especial" loading="eager" />
           <p class="dedicatoria">Tus ojos son mi lugar favorito 🥺</p>
         </div>
       </div>
@@ -251,7 +275,7 @@
           <div class="foto-flip-inner">
             <div class="foto-flip-front">
               <!-- COLOCAR ENLACE DE FOTO 5 AQUI -->
-              <img src="https://i.postimg.cc/Qdz1WFp8/5012536484854172901-121.jpg" alt="Voltea para ver la dedicatoria" loading="lazy" />
+              <img src="https://i.postimg.cc/Qdz1WFp8/5012536484854172901-121.jpg" alt="Voltea para ver la dedicatoria" loading="eager" />
             </div>
             <div class="foto-flip-back">
               <span class="flip-corazon">💕</span>
@@ -265,7 +289,7 @@
       <div class="foto-item anim-slide-left">
         <div class="foto-overlay">
           <!-- COLOCAR ENLACE DE FOTO 6 AQUI -->
-          <img src="https://i.postimg.cc/wvLXz9Rt/5012536484854172894-121.jpg" alt="Un momento precioso" loading="lazy" />
+          <img src="https://i.postimg.cc/wvLXz9Rt/5012536484854172894-121.jpg" alt="Un momento precioso" loading="eager" />
           <div class="overlay-capa">
             <p class="dedicatoria">Cada segundo a tu lado vale más que mil palabras 🌙</p>
           </div>
@@ -275,7 +299,7 @@
       <!-- FOTO 7 - WIDE (2 columnas desktop) / zoom-in -->
       <div class="foto-item anim-zoom-in foto-wide">
         <!-- COLOCAR ENLACE DE FOTO 7 AQUI -->
-        <img src="https://i.postimg.cc/RFK7mvJJ/5012536484854172895-121.jpg" alt="Nuestra foto favorita" loading="lazy" />
+        <img src="https://i.postimg.cc/RFK7mvJJ/5012536484854172895-121.jpg" alt="Nuestra foto favorita" loading="eager" />
         <div class="wide-texto">
           <p class="wide-titulo">Mi momento favorito 🌅</p>
           <p class="dedicatoria">Hay fotos que valen más que mil palabras. Esta es una de ellas. Cada vez que la veo, recuerdo todo lo que sentí y lo mucho que te quiero.</p>
@@ -290,7 +314,7 @@
           <!-- La foto polaroid -->
           <div class="foto-polaroid polaroid-rot-pos2">
             <!-- COLOCAR ENLACE DE FOTO 8 AQUI -->
-            <img src="https://i.postimg.cc/YCPYmv1G/5012536484854172902-121.jpg" alt="Recuerdo especial" loading="lazy" />
+            <img src="https://i.postimg.cc/YCPYmv1G/5012536484854172902-121.jpg" alt="Recuerdo especial" loading="eager" />
             <p class="dedicatoria">Robarte una sonrisa, mi pasatiempo favorito 😊</p>
           </div>
           <!-- Tarjeta animada que llena el espacio restante -->
@@ -305,7 +329,7 @@
       <div class="foto-item anim-slide-right">
         <div class="foto-elegante">
           <!-- COLOCAR ENLACE DE FOTO 9 AQUI -->
-          <img src="https://i.postimg.cc/JnZN8RHX/5012536484854172896-121.jpg" alt="Foto romantica" loading="lazy" />
+          <img src="https://i.postimg.cc/JnZN8RHX/5012536484854172896-121.jpg" alt="Foto romantica" loading="eager" />
           <div class="dedicatoria">Contigo todo tiene más color 🌈</div>
         </div>
       </div>
@@ -316,7 +340,7 @@
           <div class="foto-flip-inner">
             <div class="foto-flip-front">
               <!-- COLOCAR ENLACE DE FOTO 10 AQUI -->
-              <img src="https://i.postimg.cc/bw5k2ZQG/5130075171216624889-121.jpg" alt="Voltea para ver la dedicatoria" loading="lazy" />
+              <img src="https://i.postimg.cc/bw5k2ZQG/5130075171216624889-121.jpg" alt="Voltea para ver la dedicatoria" loading="eager" />
             </div>
             <div class="foto-flip-back">
               <span class="flip-corazon">🌸</span>
@@ -330,7 +354,7 @@
       <div class="foto-item anim-fade-up">
         <div class="foto-overlay">
           <!-- COLOCAR ENLACE DE FOTO 11 AQUI -->
-          <img src="https://i.postimg.cc/kXfxq1Gb/5012536484854172897-121.jpg" alt="Momento magico" loading="lazy" />
+          <img src="https://i.postimg.cc/kXfxq1Gb/5012536484854172897-121.jpg" alt="Momento magico" loading="eager" />
           <div class="overlay-capa">
             <p class="dedicatoria">Eres el sueño que nunca quiero dejar de soñar 🌟</p>
           </div>
@@ -340,7 +364,7 @@
       <!-- FOTO 12 - PANORÁMICA final (ocupa las 3 columnas) / zoom-in -->
       <div class="foto-item anim-zoom-in foto-panoramica">
         <!-- COLOCAR ENLACE DE FOTO 12 AQUI -->
-        <img src="https://i.postimg.cc/dVfrTh8C/5130075171216624890-121.jpg" alt="Ultima foto especial" loading="lazy" />
+        <img src="https://i.postimg.cc/dVfrTh8C/5130075171216624890-121.jpg" alt="Ultima foto especial" loading="eager" />
         <div class="wide-texto">
           <p class="wide-titulo">Y que vengan muchos más momentos así 💞</p>
           <p class="dedicatoria">
@@ -461,6 +485,13 @@
 </main>
 <script>
 'use strict';
+window.addEventListener('load', function() {
+  var loader = document.getElementById('pantalla-carga');
+  if (loader) {
+    loader.classList.add('oculto');
+    setTimeout(function() { loader.style.display = 'none'; }, 800);
+  }
+});
 (function(){
   var canvas=document.getElementById('particles-canvas');
   var ctx=canvas.getContext('2d');
